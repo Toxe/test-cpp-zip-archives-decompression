@@ -25,8 +25,8 @@ int main(int argc, char* argv[])
 
     while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
         if (archive_entry_filetype(entry) != AE_IFDIR) {
-            std::cout << archive_entry_pathname(entry) << ": "
-                      << "size=" << archive_entry_size(entry)
+            std::cout << archive_entry_pathname(entry) << " = "
+                      << "size (uncompressed): " << archive_entry_size(entry)
                       << std::endl;
         }
     }
