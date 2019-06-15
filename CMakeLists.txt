@@ -14,12 +14,16 @@ set(LibZip_LIBRARY "$ENV{SUITE_BUILD}/lib/libzip.dylib")
 
 add_executable(list_files_libarchive list_files_libarchive.cpp)
 add_executable(list_files_libzip list_files_libzip.cpp)
+add_executable(libzip_textfile_line_reader libzip_textfile_line_reader.cpp)
 
 target_compile_features(list_files_libarchive PUBLIC cxx_std_17)
 target_compile_features(list_files_libzip PUBLIC cxx_std_17)
+target_compile_features(libzip_textfile_line_reader PUBLIC cxx_std_17)
 
 target_link_libraries(list_files_libarchive PRIVATE "${LibArchive_LIBRARY}")
 target_link_libraries(list_files_libzip PRIVATE "${LibZip_LIBRARY}")
+target_link_libraries(libzip_textfile_line_reader PRIVATE "${LibZip_LIBRARY}")
 
 set_target_properties(list_files_libarchive PROPERTIES CXX_EXTENSIONS OFF)
 set_target_properties(list_files_libzip PROPERTIES CXX_EXTENSIONS OFF)
+set_target_properties(libzip_textfile_line_reader PROPERTIES CXX_EXTENSIONS OFF)
