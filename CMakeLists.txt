@@ -20,6 +20,10 @@ target_compile_features(list_files_libarchive PUBLIC cxx_std_17)
 target_compile_features(list_files_libzip PUBLIC cxx_std_17)
 target_compile_features(libzip_textfile_line_reader PUBLIC cxx_std_17)
 
+target_compile_options(list_files_libarchive PRIVATE -Wall -Wextra -Wmost -pedantic -Wconversion -Wfloat-equal)
+target_compile_options(list_files_libzip PRIVATE -Wall -Wextra -Wmost -pedantic -Wconversion -Wfloat-equal -Wold-style-cast -Wno-nullability-extension)
+target_compile_options(libzip_textfile_line_reader PRIVATE -Wall -Wextra -Wmost -pedantic -Wconversion -Wfloat-equal -Wold-style-cast -Wno-nullability-extension)
+
 target_link_libraries(list_files_libarchive PRIVATE "${LibArchive_LIBRARY}")
 target_link_libraries(list_files_libzip PRIVATE "${LibZip_LIBRARY}")
 target_link_libraries(libzip_textfile_line_reader PRIVATE "${LibZip_LIBRARY}")

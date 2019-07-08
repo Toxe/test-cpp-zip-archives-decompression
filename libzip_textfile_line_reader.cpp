@@ -50,7 +50,7 @@ std::streambuf::int_type libzip_textfile_line_reader::underflow()
 
     // start is now the start of the buffer, proper.
     // Read from fp_ in to the provided buffer.
-    auto n = zip_fread(fp_, start, buffer_.size() - (start - base));
+    auto n = zip_fread(fp_, start, buffer_.size() - static_cast<zip_uint64_t>(start - base));
 
     if (n == 0)
         return traits_type::eof();
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 
     auto num_entries = zip_get_num_entries(archive, 0);
 
-    for (int i = 0; i < num_entries; ++i) {
+    for (zip_uint64_t i = 0; i < static_cast<zip_uint64_t>(num_entries); ++i) {
         if (zip_stat_index(archive, i, 0, &stat) < 0)
             throw std::runtime_error{"zip_stat_index error"};
 
