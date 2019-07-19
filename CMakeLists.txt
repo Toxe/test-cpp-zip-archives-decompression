@@ -7,13 +7,13 @@ set(ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
 find_package(PkgConfig REQUIRED)
 
 find_package(LibArchive REQUIRED)
+find_package(BZip2 REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(LibXML2 REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(LibLZMA REQUIRED)
 find_package(unofficial-iconv REQUIRED)
 
-find_library(LibBZip2_LIBRARY bz2)
 find_library(LibLZ4_LIBRARY lz4)
 
 pkg_check_modules(LibZip REQUIRED libzip)
@@ -44,6 +44,6 @@ target_include_directories(list_files_libarchive PRIVATE ${LibArchive_INCLUDE_DI
 target_include_directories(list_files_libzip PRIVATE ${LibZip_INCLUDE_DIRS})
 target_include_directories(libzip_textfile_line_reader PRIVATE ${LibZip_INCLUDE_DIRS})
 
-target_link_libraries(list_files_libarchive PRIVATE ${LibArchive_LIBRARY} ${ZLIB_LIBRARY} ${LIBXML2_LIBRARY} ${OpenSSL_LIBRARIES} ${LibBZip2_LIBRARY} ${LibLZ4_LIBRARY} ${LibLZO_LIBRARY} ${LibLZMA_LIBRARY} unofficial::iconv::libiconv unofficial::iconv::libcharset)
-target_link_libraries(list_files_libzip PRIVATE ${LibZip_LIBRARY} ${LibBZip2_LIBRARY} ${ZLIB_LIBRARY})
-target_link_libraries(libzip_textfile_line_reader PRIVATE ${LibZip_LIBRARY} ${LibBZip2_LIBRARY} ${ZLIB_LIBRARY})
+target_link_libraries(list_files_libarchive PRIVATE ${LibArchive_LIBRARY} ${ZLIB_LIBRARY} ${LIBXML2_LIBRARY} ${OpenSSL_LIBRARIES} ${LibLZ4_LIBRARY} ${LibLZO_LIBRARY} ${LibLZMA_LIBRARY} BZip2::BZip2 unofficial::iconv::libiconv unofficial::iconv::libcharset)
+target_link_libraries(list_files_libzip PRIVATE ${LibZip_LIBRARY} ${ZLIB_LIBRARY} BZip2::BZip2)
+target_link_libraries(libzip_textfile_line_reader PRIVATE ${LibZip_LIBRARY} ${ZLIB_LIBRARY} BZip2::BZip2)
