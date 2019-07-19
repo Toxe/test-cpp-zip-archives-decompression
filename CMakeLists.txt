@@ -3,31 +3,47 @@ project("ZIP Archives Decompression" LANGUAGES CXX)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-find_package(LibArchive)
+set(ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig")
+find_package(PkgConfig REQUIRED)
 
-# Theoretisch sollte es reichen CMake mit -DCMAKE_PREFIX_PATH=$SUITE_BUILD aufzurufen,
-# aber aus irgendeinem Grund wird dann die System Version von libarchive.dylib verwendet.
-include_directories("$ENV{SUITE_BUILD}/include")
+find_package(LibArchive REQUIRED)
+find_package(ZLIB REQUIRED)
+find_package(LibXML2 REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(LibLZMA REQUIRED)
+find_package(unofficial-iconv REQUIRED)
 
-set(LibArchive_LIBRARY "$ENV{SUITE_BUILD}/lib/libarchive.dylib")
-set(LibZip_LIBRARY "$ENV{SUITE_BUILD}/lib/libzip.dylib")
+find_library(LibBZip2_LIBRARY bz2)
+find_library(LibLZ4_LIBRARY lz4)
 
-add_executable(list_files_libarchive list_files_libarchive.cpp)
-add_executable(list_files_libzip list_files_libzip.cpp)
-add_executable(libzip_textfile_line_reader libzip_textfile_line_reader.cpp)
+pkg_check_modules(LibZip REQUIRED libzip)
+pkg_check_modules(LibLZO REQUIRED lzo2)
 
-target_compile_features(list_files_libarchive PUBLIC cxx_std_17)
-target_compile_features(list_files_libzip PUBLIC cxx_std_17)
-target_compile_features(libzip_textfile_line_reader PUBLIC cxx_std_17)
+set(OpenSSL_LIBRARIES "${OPENSSL_CRYPTO_LIBRARY}" "${OPENSSL_SSL_LIBRARY}")
+set(LibZip_LIBRARY "${pkgcfg_lib_LibZip_zip}")
+set(LibLZO_LIBRARY "${pkgcfg_lib_LibLZO_lzo2}")
 
-target_compile_options(list_files_libarchive PRIVATE -Wall -Wextra -Wmost -pedantic -Wconversion -Wfloat-equal)
-target_compile_options(list_files_libzip PRIVATE -Wall -Wextra -Wmost -pedantic -Wconversion -Wfloat-equal -Wold-style-cast -Wno-nullability-extension)
-target_compile_options(libzip_textfile_line_reader PRIVATE -Wall -Wextra -Wmost -pedantic -Wconversion -Wfloat-equal -Wold-style-cast -Wno-nullability-extension)
+set(ALL_TARGETS
+    list_files_libarchive
+    list_files_libzip
+    libzip_textfile_line_reader
+)
 
-target_link_libraries(list_files_libarchive PRIVATE "${LibArchive_LIBRARY}")
-target_link_libraries(list_files_libzip PRIVATE "${LibZip_LIBRARY}")
-target_link_libraries(libzip_textfile_line_reader PRIVATE "${LibZip_LIBRARY}")
+foreach(target ${ALL_TARGETS})
+    add_executable(${target} ${target}.cpp)
+    target_compile_features(${target} PUBLIC cxx_std_17)
+    target_compile_options(${target} PRIVATE -Wall -Wextra -Wmost -pedantic -Wconversion -Wfloat-equal -Wold-style-cast -fcolor-diagnostics)
+    set_target_properties(${target} PROPERTIES CXX_EXTENSIONS OFF)
+endforeach()
 
-set_target_properties(list_files_libarchive PROPERTIES CXX_EXTENSIONS OFF)
-set_target_properties(list_files_libzip PROPERTIES CXX_EXTENSIONS OFF)
-set_target_properties(libzip_textfile_line_reader PROPERTIES CXX_EXTENSIONS OFF)
+target_compile_options(list_files_libarchive PRIVATE -Wno-old-style-cast)
+target_compile_options(list_files_libzip PRIVATE -Wno-nullability-extension)
+target_compile_options(libzip_textfile_line_reader PRIVATE -Wno-nullability-extension)
+
+target_include_directories(list_files_libarchive PRIVATE ${LibArchive_INCLUDE_DIRS})
+target_include_directories(list_files_libzip PRIVATE ${LibZip_INCLUDE_DIRS})
+target_include_directories(libzip_textfile_line_reader PRIVATE ${LibZip_INCLUDE_DIRS})
+
+target_link_libraries(list_files_libarchive PRIVATE ${LibArchive_LIBRARY} ${ZLIB_LIBRARY} ${LIBXML2_LIBRARY} ${OpenSSL_LIBRARIES} ${LibBZip2_LIBRARY} ${LibLZ4_LIBRARY} ${LibLZO_LIBRARY} ${LibLZMA_LIBRARY} unofficial::iconv::libiconv unofficial::iconv::libcharset)
+target_link_libraries(list_files_libzip PRIVATE ${LibZip_LIBRARY} ${LibBZip2_LIBRARY} ${ZLIB_LIBRARY})
+target_link_libraries(libzip_textfile_line_reader PRIVATE ${LibZip_LIBRARY} ${LibBZip2_LIBRARY} ${ZLIB_LIBRARY})
