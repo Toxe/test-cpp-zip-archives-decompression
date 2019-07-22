@@ -38,10 +38,6 @@ target_compile_options(list_files_libarchive PRIVATE -Wno-old-style-cast)
 target_compile_options(list_files_libzip PRIVATE -Wno-nullability-extension)
 target_compile_options(libzip_textfile_line_reader PRIVATE -Wno-nullability-extension)
 
-target_include_directories(list_files_libarchive PRIVATE ${LibArchive_INCLUDE_DIRS})
-target_include_directories(list_files_libzip PRIVATE ${LibZip_INCLUDE_DIRS})
-target_include_directories(libzip_textfile_line_reader PRIVATE ${LibZip_INCLUDE_DIRS})
-
 target_link_libraries(list_files_libarchive PRIVATE ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LibLZO_LIBRARY} ZLIB::ZLIB lz4::lz4 LibLZMA::LibLZMA OpenSSL::SSL OpenSSL::Crypto BZip2::BZip2 unofficial::iconv::libiconv unofficial::iconv::libcharset)
 target_link_libraries(list_files_libzip PRIVATE ${LibZip_LIBRARY} ZLIB::ZLIB BZip2::BZip2)
 target_link_libraries(libzip_textfile_line_reader PRIVATE ${LibZip_LIBRARY} ZLIB::ZLIB BZip2::BZip2)
