@@ -17,9 +17,11 @@ find_package(unofficial-iconv CONFIG REQUIRED)
 
 pkg_check_modules(LibZip REQUIRED libzip)
 pkg_check_modules(LibLZO REQUIRED lzo2)
+pkg_check_modules(zstd REQUIRED libzstd)
 
 set(LibZip_LIBRARY "${pkgcfg_lib_LibZip_zip}")
 set(LibLZO_LIBRARY "${pkgcfg_lib_LibLZO_lzo2}")
+set(zstd_LIBRARY "${pkgcfg_lib_zstd_zstd}")
 
 set(ALL_TARGETS
     list_files_libarchive
@@ -38,6 +40,6 @@ target_compile_options(list_files_libarchive PRIVATE -Wno-old-style-cast)
 target_compile_options(list_files_libzip PRIVATE -Wno-nullability-extension)
 target_compile_options(libzip_textfile_line_reader PRIVATE -Wno-nullability-extension)
 
-target_link_libraries(list_files_libarchive PRIVATE ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LibLZO_LIBRARY} ZLIB::ZLIB lz4::lz4 LibLZMA::LibLZMA OpenSSL::SSL OpenSSL::Crypto BZip2::BZip2 unofficial::iconv::libiconv unofficial::iconv::libcharset)
+target_link_libraries(list_files_libarchive PRIVATE ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LibLZO_LIBRARY} ${zstd_LIBRARY} ZLIB::ZLIB lz4::lz4 LibLZMA::LibLZMA OpenSSL::SSL OpenSSL::Crypto BZip2::BZip2 unofficial::iconv::libiconv unofficial::iconv::libcharset)
 target_link_libraries(list_files_libzip PRIVATE ${LibZip_LIBRARY} ZLIB::ZLIB BZip2::BZip2)
 target_link_libraries(libzip_textfile_line_reader PRIVATE ${LibZip_LIBRARY} ZLIB::ZLIB BZip2::BZip2)
