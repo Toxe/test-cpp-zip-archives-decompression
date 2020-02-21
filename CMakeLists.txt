@@ -30,7 +30,7 @@ endif()
 if(CMAKE_HOST_WIN32)
     find_library(LibZip_LIBRARY zip)
     find_library(LibLZO_LIBRARY lzo2)
-    find_library(zstd_LIBRARY libzstd)
+    find_library(zstd_LIBRARY zstd)
 endif()
 
 set(ALL_TARGETS
