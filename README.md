@@ -14,3 +14,9 @@
 - lzo
 - iconv
 - zstd
+
+### Vcpkg
+
+Install Vcpkg dependencies with:
+
+    $ vcpkg install $(< .vcpkg)
